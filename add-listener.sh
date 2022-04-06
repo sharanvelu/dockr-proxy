@@ -31,19 +31,28 @@ LISTEN_CONF="server {
     }
 }"
 
+# Generate certificate for the specified domain
+generate_certificate() {
+    # Make new directory for domain certificate if the dir doesn't exist
+    if [ ! -d "${DT_CERTIFICATE_PATH}" ]; then
+        mkdir ${DT_CERTIFICATE_PATH}
+
+        # Create self signing SSL certificate if it doesn't exist
+        if [ ! -f "${DT_CERTIFICATE_PATH}/key.key" ]; then
+            openssl req -x509 -nodes \
+                -days 365 \
+                -subj "/C=IN/ST=TN/O=DockR/CN=${INCOMING_DOMAIN}" \
+                -addext "subjectAltName=DNS:${INCOMING_DOMAIN}" \
+                -newkey rsa:2048 \
+                -keyout ${DT_CERTIFICATE_PATH}/key.key \
+                -out ${DT_CERTIFICATE_PATH}/cert.crt >> /dev/null 2>&1;
+        fi
+    fi
+}
+
 # Adds the Proxy Listener for specified Domain
 add_listener() {
-    # Make new directory for domain
-    mkdir ${DT_CERTIFICATE_PATH}
-
-    # Create self signing SSL certificate
-    openssl req -x509 -nodes \
-        -days 365 \
-        -subj "/C=IN/ST=TN/O=DockR/CN=${INCOMING_DOMAIN}" \
-        -addext "subjectAltName=DNS:${INCOMING_DOMAIN}" \
-        -newkey rsa:2048 \
-        -keyout ${DT_CERTIFICATE_PATH}/key.key \
-        -out ${DT_CERTIFICATE_PATH}/cert.crt >> /dev/null 2>&1;
+    generate_certificate
 
     # Create Configuration file for Specified Domain
     echo "${LISTEN_CONF}" >> /etc/nginx/sites-available/${INCOMING_DOMAIN}
@@ -63,3 +72,5 @@ remove_existing_listener
 add_listener
 
 service nginx reload
+
+sleep 2
