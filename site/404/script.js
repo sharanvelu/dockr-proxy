@@ -79,5 +79,5 @@ gsap.to("#glassShine", {
 });
 
 function openDocumentationUrl() {
-    window.location.href = "https://docs.dockr.in/docs/latest/introduction"
+    window.location.href = "https://dockr.in/docs/introduction"
 }

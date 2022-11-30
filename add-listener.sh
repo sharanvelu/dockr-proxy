@@ -19,6 +19,9 @@ LISTEN_CONF="server {
 
     # Listen for specified Domain Name
     server_name ${INCOMING_DOMAIN};
+
+    client_max_body_size 1000M;
+
     location / {
         # Pass the request to the specified Site via Proxy
         proxy_pass ${PROXY_SITE};
@@ -28,6 +31,7 @@ LISTEN_CONF="server {
         proxy_set_header X-Real-IP  \$remote_addr;
         proxy_set_header X-Forwarded-For \$remote_addr;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Port \$port;
     }
 }"
 
