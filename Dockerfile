@@ -1,7 +1,7 @@
 FROM ubuntu/nginx:latest
 
 RUN apt-get update && \
-    apt-get install -y vim
+    apt-get install -y vim openssl
 
 # Removes default Virtual server conf file
 RUN unlink /etc/nginx/sites-enabled/default

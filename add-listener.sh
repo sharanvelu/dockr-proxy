@@ -31,7 +31,6 @@ LISTEN_CONF="server {
         proxy_set_header X-Real-IP  \$remote_addr;
         proxy_set_header X-Forwarded-For \$remote_addr;
         proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_set_header X-Forwarded-Port \$port;
     }
 }"
 
@@ -39,7 +38,7 @@ LISTEN_CONF="server {
 generate_certificate() {
     # Make new directory for domain certificate if the dir doesn't exist
     if [ ! -d "${DT_CERTIFICATE_PATH}" ]; then
-        mkdir ${DT_CERTIFICATE_PATH}
+        mkdir -p ${DT_CERTIFICATE_PATH}
 
         # Create self signing SSL certificate if it doesn't exist
         if [ ! -f "${DT_CERTIFICATE_PATH}/key.key" ]; then
