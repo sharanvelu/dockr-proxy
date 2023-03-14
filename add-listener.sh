@@ -4,6 +4,8 @@
 
 INCOMING_DOMAIN=$1
 PROXY_SITE=$2
+PROXY_APP_PORT=$3
+PROXY_VITE_PORT=$4
 
 # Certificate path for the Specified Domain
 DT_CERTIFICATE_PATH="/etc/ssl/${INCOMING_DOMAIN}"
@@ -24,7 +26,27 @@ LISTEN_CONF="server {
 
     location / {
         # Pass the request to the specified Site via Proxy
-        proxy_pass ${PROXY_SITE};
+        proxy_pass ${PROXY_SITE}:${PROXY_APP_PORT};
+        proxy_set_header Host \$host;
+
+        # Additional Headers
+        proxy_set_header X-Real-IP  \$remote_addr;
+        proxy_set_header X-Forwarded-For \$remote_addr;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+
+server {
+    listen 5173;
+
+    # Listen for specified Domain Name
+    server_name ${INCOMING_DOMAIN};
+
+    client_max_body_size 1000M;
+
+    location / {
+        # Pass the request to the specified Site via Proxy
+        proxy_pass ${PROXY_SITE}:${PROXY_VITE_PORT};
         proxy_set_header Host \$host;
 
         # Additional Headers

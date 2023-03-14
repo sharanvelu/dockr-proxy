@@ -19,3 +19,4 @@ COPY add-listener.sh /usr/local/bin/add-listener
 RUN chmod u+x /usr/local/bin/add-listener
 
 EXPOSE 443
+EXPOSE 5173
