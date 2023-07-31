@@ -66,7 +66,7 @@ generate_certificate() {
         if [ ! -f "${DT_CERTIFICATE_PATH}/key.key" ]; then
             openssl req -x509 -nodes \
                 -days 365 \
-                -subj "/C=IN/ST=TN/O=DockR/CN=${INCOMING_DOMAIN}" \
+                -subj "/C=IN/ST=TN/O=DockR/OU=IT/CN=${INCOMING_DOMAIN}/MAIL=admin@${INCOMING_DOMAIN}" \
                 -addext "subjectAltName=DNS:${INCOMING_DOMAIN}" \
                 -newkey rsa:2048 \
                 -keyout ${DT_CERTIFICATE_PATH}/key.key \
